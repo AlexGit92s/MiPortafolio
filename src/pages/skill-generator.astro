@@ -1,0 +1,878 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Skill Generator CLI — Tutorial Interactivo"
+  description="Genera skills de IA para cualquier proyecto en 30 segundos. Tutorial interactivo del Skill Generator CLI."
+>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0b;
+    --surface: #111113;
+    --border: #1e1e22;
+    --text: #e8e6dc;
+    --text-dim: #6b6b6b;
+    --accent: #d4a853;
+    --accent-light: #e8c97a;
+    --accent-dark: #c4933f;
+    --rose: #fa5252;
+    --rose-light: #ff7676;
+    --green: #788c5d;
+    --glow: rgba(212, 168, 83, 0.15);
+  }
+
+  .tutorial-page {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* Back to portfolio link */
+  .back-link {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    z-index: 200;
+    transition: all 0.3s ease;
+    pointer-events: all;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--glow);
+  }
+
+  .back-link svg {
+    transition: transform 0.3s ease;
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
+  }
+
+  .slides {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  /* Slide 1: Hero */
+  .hero-badge {
+    background: var(--glow);
+    border: 1px solid rgba(212, 168, 83, 0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212, 168, 83, 0.2); }
+    50% { box-shadow: 0 0 0 8px rgba(212, 168, 83, 0); }
+  }
+
+  .hero-title {
+    font-size: 52px;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--rose) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-dim);
+    text-align: center;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  .hero-sub strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Slide 2: Problem */
+  .problem-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+    animation: shake 0.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes shake {
+    0% { transform: rotate(-3deg); }
+    100% { transform: rotate(3deg); }
+  }
+
+  .problem-text {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .problem-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .problem-list li {
+    font-size: 16px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .problem-list li .x {
+    color: var(--rose);
+    font-weight: 700;
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+  }
+
+  /* Slide 3: Solution */
+  .solution-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+    animation: bounce 1s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .solution-title {
+    font-size: 32px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .solution-sub {
+    font-size: 16px;
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 480px;
+  }
+
+  .feature {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .feature:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px var(--glow);
+  }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .feature-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .feature-desc {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+
+  /* Slide 4: Terminal Demo */
+  .terminal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 560px;
+    overflow: hidden;
+  }
+
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .dot.red { background: #e74c3c; }
+  .dot.yellow { background: #f39c12; }
+  .dot.green { background: #27ae60; }
+
+  .terminal-title {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-left: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .terminal-body {
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .terminal-line {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.4s ease;
+  }
+
+  .terminal-line.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .prompt {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .cmd {
+    color: #fff;
+  }
+
+  .flag {
+    color: var(--rose-light);
+  }
+
+  .success {
+    color: var(--green);
+  }
+
+  .dim {
+    color: var(--text-dim);
+  }
+
+  /* Slide 5: Stats */
+  .stats {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 48px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--rose));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  .techs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    max-width: 500px;
+  }
+
+  .tech-tag {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: all 0.3s ease;
+  }
+
+  .tech-tag.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--glow);
+  }
+
+  /* Slide 6: CTA */
+  .cta-title {
+    font-size: 40px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .cta-code {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: var(--accent);
+    margin-bottom: 24px;
+    text-align: center;
+    line-height: 1.8;
+  }
+
+  .cta-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .cta-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .cta-step .num {
+    background: var(--accent);
+    color: #000;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 13px;
+  }
+
+  .github-link {
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--rose-light);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .github-link:hover {
+    color: var(--accent);
+  }
+
+  /* Progress bar */
+  .progress {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--rose));
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+  }
+
+  /* Auto-play indicator */
+  .auto-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    z-index: 100;
+  }
+
+  .auto-indicator .dot-live {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 1s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Keyboard hint */
+  .keyboard-hint {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    z-index: 100;
+  }
+
+  kbd {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+</style>
+
+<div class="tutorial-page">
+  <a href="/" class="back-link" onclick="window.location.href='/'">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+    Portfolio
+  </a>
+
+  <div class="auto-indicator">
+    <div class="dot-live"></div>
+    <span id="slideCounter">1 / 6</span>
+  </div>
+
+  <div class="progress" id="progress"></div>
+
+  <div class="keyboard-hint">
+    <kbd>Space</kbd> next · <kbd>←</kbd> prev · <kbd>A</kbd> auto-play
+  </div>
+
+  <div class="slides">
+    <!-- SLIDE 1: Hero -->
+    <div class="slide active" data-slide="0">
+      <div class="hero-badge">Open Source · Gratis · Universal</div>
+      <h1 class="hero-title">Skill Generator</h1>
+      <p class="hero-sub">
+        Genera <strong>skills de IA</strong> para cualquier proyecto.<br>
+        Detecta tu stack. Adapta las instrucciones.<br>
+        <strong>30 segundos.</strong>
+      </p>
+    </div>
+
+    <!-- SLIDE 2: Problem -->
+    <div class="slide" data-slide="1">
+      <div class="problem-icon">😩</div>
+      <h2 class="problem-text">El problema</h2>
+      <p style="color: var(--text-dim); text-align: center; max-width: 400px;">
+        Cada proyecto necesita instrucciones específicas para la IA, pero escribir skills manualmente es lento y repetitivo.
+      </p>
+      <ul class="problem-list">
+        <li><span class="x">✕</span> Escribir cada SKILL.md a mano</li>
+        <li><span class="x">✕</span> Copiar y pegar de otros proyectos</li>
+        <li><span class="x">✕</span> Skills genéricos sin contexto real</li>
+        <li><span class="x">✕</span> Mantener skills actualizados</li>
+      </ul>
+    </div>
+
+    <!-- SLIDE 3: Solution -->
+    <div class="slide" data-slide="2">
+      <div class="solution-icon">⚡</div>
+      <h2 class="solution-title">La solución</h2>
+      <p class="solution-sub">Un CLI que analiza tu proyecto y genera skills adaptados</p>
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-title">Auto-detect</div>
+          <div class="feature-desc">Detecta framework, DB, testing, styling</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-title">45+ Skills</div>
+          <div class="feature-desc">React, Laravel, Django, Next.js y más</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔧</div>
+          <div class="feature-title">Adaptado</div>
+          <div class="feature-desc">Variables se reemplazan con tu contexto real</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">✨</div>
+          <div class="feature-title">Custom</div>
+          <div class="feature-desc">Crea skills propios desde cero</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Terminal Demo -->
+    <div class="slide" data-slide="3">
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+          <span class="terminal-title">~/mi-proyecto</span>
+        </div>
+        <div class="terminal-body" id="terminalBody">
+          <div class="terminal-line" data-delay="0">
+            <span class="prompt">❯ </span><span class="cmd">skill-gen </span><span class="flag">create laravel-development pest-testing tailwindcss</span>
+          </div>
+          <div class="terminal-line" data-delay="600">
+            <span class="dim"></span>
+          </div>
+          <div class="terminal-line" data-delay="800">
+            <span class="success">✨ Generating 3 skill(s)...</span>
+          </div>
+          <div class="terminal-line" data-delay="1200">
+            <span class="dim">  ✓ laravel-development</span>
+          </div>
+          <div class="terminal-line" data-delay="1500">
+            <span class="dim">  ✓ pest-testing</span>
+          </div>
+          <div class="terminal-line" data-delay="1800">
+            <span class="dim">  ✓ tailwindcss-development</span>
+          </div>
+          <div class="terminal-line" data-delay="2200">
+            <span class="dim"></span>
+          </div>
+          <div class="terminal-line" data-delay="2400">
+            <span class="success">✅ Skills generated successfully!</span>
+          </div>
+          <div class="terminal-line" data-delay="2800">
+            <span class="dim">  📄 .agent/skills/laravel-development/SKILL.md</span>
+          </div>
+          <div class="terminal-line" data-delay="3000">
+            <span class="dim">  📄 .agent/skills/pest-testing/SKILL.md</span>
+          </div>
+          <div class="terminal-line" data-delay="3200">
+            <span class="dim">  📄 .agent/skills/tailwindcss-development/SKILL.md</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: Stats -->
+    <div class="slide" data-slide="4">
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number" id="stat1">0</div>
+          <div class="stat-label">Skills</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="stat2">0</div>
+          <div class="stat-label">Tecnologías</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="stat3">0</div>
+          <div class="stat-label">Segundos</div>
+        </div>
+      </div>
+      <p style="color: var(--text-dim); text-align: center; margin-bottom: 24px; font-size: 16px;">
+        Soporta todo tu stack:
+      </p>
+      <div class="techs" id="techTags">
+        <span class="tech-tag">React</span>
+        <span class="tech-tag">Vue</span>
+        <span class="tech-tag">Angular</span>
+        <span class="tech-tag">Next.js</span>
+        <span class="tech-tag">Laravel</span>
+        <span class="tech-tag">Django</span>
+        <span class="tech-tag">FastAPI</span>
+        <span class="tech-tag">NestJS</span>
+        <span class="tech-tag">PostgreSQL</span>
+        <span class="tech-tag">Prisma</span>
+        <span class="tech-tag">Tailwind</span>
+        <span class="tech-tag">Docker</span>
+        <span class="tech-tag">Pest</span>
+        <span class="tech-tag">Jest</span>
+        <span class="tech-tag">Playwright</span>
+        <span class="tech-tag">GitHub Actions</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: CTA -->
+    <div class="slide" data-slide="5">
+      <h2 class="cta-title">Pruébalo ahora</h2>
+      <div class="cta-code">
+        git clone github.com/AlexGit92s/SkillGenerator<br>
+        cd SkillGenerator && npm install && npm link<br>
+        <span style="color: var(--text-dim); font-size: 14px;">skill-gen analyze</span>
+      </div>
+      <div class="cta-steps">
+        <div class="cta-step">
+          <div class="num">1</div>
+          <span>Clona el repo</span>
+        </div>
+        <div class="cta-step">
+          <div class="num">2</div>
+          <span>npm install && npm link</span>
+        </div>
+        <div class="cta-step">
+          <div class="num">3</div>
+          <span>skill-gen create tu-tecnologia</span>
+        </div>
+      </div>
+      <a href="https://github.com/AlexGit92s/SkillGenerator" target="_blank" rel="noopener noreferrer" class="github-link">
+        ⭐ github.com/AlexGit92s/SkillGenerator
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  let currentSlide = 0;
+  let autoPlay = true;
+  let autoInterval: any;
+  let terminalAnimated = false;
+  let statsAnimated = false;
+
+  function goToSlide(index: number) {
+    if (index < 0 || index >= totalSlides) return;
+
+    slides[currentSlide].classList.remove('active');
+    slides[currentSlide].classList.add('exit');
+
+    setTimeout(() => {
+      slides[currentSlide].classList.remove('exit');
+    }, 800);
+
+    currentSlide = index;
+    slides[currentSlide].classList.add('active');
+
+    // Update progress
+    const progressEl = document.getElementById('progress');
+    const counterEl = document.getElementById('slideCounter');
+    if (progressEl) progressEl.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
+    if (counterEl) counterEl.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+
+    // Animate terminal
+    if (currentSlide === 3 && !terminalAnimated) {
+      terminalAnimated = true;
+      animateTerminal();
+    }
+
+    // Animate stats
+    if (currentSlide === 4 && !statsAnimated) {
+      statsAnimated = true;
+      animateStats();
+      animateTechTags();
+    }
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides - 1) {
+      goToSlide(currentSlide + 1);
+    } else {
+      goToSlide(0);
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) {
+      goToSlide(currentSlide - 1);
+    }
+  }
+
+  // Terminal animation
+  function animateTerminal() {
+    const lines = document.querySelectorAll<HTMLElement>('#terminalBody .terminal-line');
+    lines.forEach((line) => {
+      const delay = parseInt(line.dataset.delay) || 0;
+      setTimeout(() => {
+        line.classList.add('visible');
+      }, delay);
+    });
+  }
+
+  // Stats counter animation
+  function animateStats() {
+    const targets = [
+      { el: document.getElementById('stat1'), target: 45 },
+      { el: document.getElementById('stat2'), target: 30 },
+      { el: document.getElementById('stat3'), target: 30 },
+    ];
+
+    targets.forEach(({ el, target }) => {
+      if (!el) return;
+      let current = 0;
+      const increment = target / 40;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        el.textContent = Math.round(current) + '+';
+      }, 30);
+    });
+  }
+
+  // Tech tags animation
+  function animateTechTags() {
+    const tags = document.querySelectorAll('.tech-tag');
+    tags.forEach((tag, i) => {
+      setTimeout(() => {
+        tag.classList.add('active');
+      }, 200 + i * 120);
+    });
+  }
+
+  // Keyboard controls
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.code === 'Space' || e.code === 'ArrowRight') {
+      e.preventDefault();
+      nextSlide();
+      resetAutoPlay();
+    }
+    if (e.code === 'ArrowLeft') {
+      e.preventDefault();
+      prevSlide();
+      resetAutoPlay();
+    }
+    if (e.code === 'KeyA') {
+      autoPlay = !autoPlay;
+      if (autoPlay) startAutoPlay();
+      else stopAutoPlay();
+    }
+  });
+
+  // Touch/click support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e: TouchEvent) => {
+    touchStartX = e.touches[0].clientX;
+  });
+
+  document.addEventListener('touchend', (e: TouchEvent) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) nextSlide();
+      else prevSlide();
+      resetAutoPlay();
+    }
+  });
+
+  // Auto-play
+  function startAutoPlay() {
+    stopAutoPlay();
+    autoInterval = setInterval(() => {
+      if (autoPlay) nextSlide();
+    }, 4500);
+  }
+
+  function stopAutoPlay() {
+    if (autoInterval) clearInterval(autoInterval);
+  }
+
+  function resetAutoPlay() {
+    stopAutoPlay();
+    if (autoPlay) startAutoPlay();
+  }
+
+  // Start auto-play
+  startAutoPlay();
+
+  // Reset animations when slides change
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      const target = mutation.target as HTMLElement;
+      if (target.classList.contains('slide') && !target.classList.contains('active')) {
+        if (target.dataset.slide === '3') {
+          terminalAnimated = false;
+          document.querySelectorAll<HTMLElement>('#terminalBody .terminal-line').forEach(line => {
+            line.classList.remove('visible');
+          });
+        }
+        if (target.dataset.slide === '4') {
+          statsAnimated = false;
+          const stat1 = document.getElementById('stat1');
+          const stat2 = document.getElementById('stat2');
+          const stat3 = document.getElementById('stat3');
+          if (stat1) stat1.textContent = '0';
+          if (stat2) stat2.textContent = '0';
+          if (stat3) stat3.textContent = '0';
+          document.querySelectorAll('.tech-tag').forEach(tag => tag.classList.remove('active'));
+        }
+      }
+    });
+  });
+
+  slides.forEach(slide => {
+    observer.observe(slide, { attributes: true, attributeFilter: ['class'] });
+  });
+</script>
+</BaseLayout>

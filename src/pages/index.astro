@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import ProjectsSection from '../components/ProjectsSection.astro';
+import SkillsSection from '../components/SkillsSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { siteConfig } from '../config/site';
+---
+
+<BaseLayout
+  title={siteConfig.title}
+  description={siteConfig.description}
+  url={siteConfig.url}
+  type="website"
+>
+  <HeroSection />
+  <ServicesSection />
+  <ProjectsSection />
+  <SkillsSection />
+  <ContactSection />
+</BaseLayout>

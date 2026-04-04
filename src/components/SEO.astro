@@ -1,0 +1,205 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  url?: string;
+  type?: string;
+  publishedTime?: string;
+  authors?: string[];
+}
+
+const {
+  title,
+  description,
+  image = '/og-image.webp',
+  url = 'https://tu-dominio.com',
+  type = 'website',
+  publishedTime,
+  authors = ['Alex'],
+} = Astro.props;
+
+const siteUrl = 'https://tu-dominio.com';
+const fullUrl = url.startsWith('http') ? url : `${siteUrl}${url}`;
+const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
+---
+
+<!-- Primary Meta Tags -->
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<meta name="author" content={authors.join(', ')} />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="language" content="Spanish" />
+<meta name="revisit-after" content="7 days" />
+<meta name="theme-color" content="#0ea5e9" />
+<link rel="canonical" href={fullUrl} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={type} />
+<meta property="og:url" content={fullUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/webp" />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:site_name" content="Alexander Silva | Facilitador de Soluciones Digitales" />
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={fullUrl} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+<meta name="twitter:creator" content="@tu-usuario" />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": type === 'article' ? 'Article' : 'WebSite',
+  "name": title,
+  "description": description,
+  "url": fullUrl,
+  "image": imageUrl,
+  "author": {
+    "@type": "Person",
+    "name": "Alexander Silva",
+    "url": siteUrl,
+    "sameAs": [
+      "https://github.com/AlexGit92s",
+      "https://linkedin.com/in/tu-perfil"
+    ]
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Alexander Silva | Facilitador de Soluciones Digitales",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteUrl}/logo.webp`
+    }
+  },
+  ...(publishedTime ? { "datePublished": publishedTime } : {})
+})}></script>
+
+<!-- Person Schema for Homepage -->
+{type === 'website' && fullUrl === siteUrl && (
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Alexander Silva",
+    "jobTitle": "Facilitador de Soluciones Digitales",
+    "description": description,
+    "url": siteUrl,
+    "email": "mailto:alexander92911@gmail.com",
+    "telephone": "+50494500775",
+    "homeLocation": {
+      "@type": "Place",
+      "name": "Tegucigalpa, Honduras"
+    },
+    "sameAs": [
+      "https://github.com/AlexGit92s",
+      "https://linkedin.com/in/tu-perfil",
+      "https://twitter.com/tu-usuario"
+    ],
+    "knowsAbout": [
+      "Desarrollo Web",
+      "Aplicaciones Móviles",
+      "SEO",
+      "Optimización de Performance",
+      "DevOps",
+      "Seguridad Web"
+    ],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Freelance"
+    }
+  })}></script>
+)}
+
+<!-- Service Schema -->
+{type === 'website' && fullUrl === siteUrl && (
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Desarrollo de Soluciones Digitales",
+    "provider": {
+      "@type": "Person",
+      "name": "Alexander Silva"
+    },
+    "areaServed": {
+      "@type": "WorldWide",
+      "name": "Global"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Servicios Digitales",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Desarrollo Web Full-Stack"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Apps Móviles"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Optimización de Performance"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "SEO & Marketing Digital"
+          }
+        }
+      ]
+    }
+  })}></script>
+)}
+
+<!-- FAQ Schema for SEO -->
+{type === 'website' && fullUrl === siteUrl && (
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Qué servicios de desarrollo web ofrece Alexander Silva?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ofrezco desarrollo web full-stack con Next.js 16, React 19, Laravel 12, NestJS 11, bases de datos PostgreSQL/MySQL/Supabase, plataformas SaaS con Stripe, ERPs personalizados y dashboards administrativos con analytics."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto tiempo toma desarrollar un proyecto web?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Depende de la complejidad. Una landing page puede estar lista en 1-2 semanas, un ERP completo con backend Laravel y frontend Next.js puede tomar 6-12 semanas, y una plataforma SaaS multi-tenant entre 8-16 semanas."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Trabajas con clientes fuera de Honduras?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí, trabajo con clientes de todo el mundo desde Tegucigalpa, Honduras. La comunicación es completamente remota con herramientas colaborativas modernas y despliegue en Vercel, Supabase o infraestructura Docker."
+        }
+      }
+    ]
+  })}></script>
+)}

@@ -1,0 +1,118 @@
+---
+import { projects } from '../config/site';
+
+const featuredProjects = projects.filter(p => p.featured);
+const allProjects = projects;
+---
+
+<section id="proyectos" class="relative py-24 bg-dark-950">
+  <!-- Background -->
+  <div class="absolute inset-0 bg-grid opacity-30"></div>
+  <div class="absolute bottom-0 right-0 w-[600px] h-[400px] bg-accent-600/10 rounded-full blur-3xl"></div>
+
+  <div class="relative section-container">
+    <!-- Header -->
+    <div class="text-center mb-16 animate-on-scroll">
+      <span class="inline-block px-4 py-2 rounded-full bg-accent-500/10 border border-accent-500/20 text-accent-400 text-sm font-medium mb-4">
+        Portafolio
+      </span>
+      <h2 class="section-title">
+        Proyectos <span class="gradient-text">Destacados</span>
+      </h2>
+      <p class="section-subtitle">
+        Una selección de mis trabajos más recientes e impactantes. Cada proyecto representa un desafío único y una solución innovadora.
+      </p>
+    </div>
+
+    <!-- Featured Projects -->
+    <div class="space-y-12 mb-16">
+      {featuredProjects.map((project, index) => (
+        <article
+          class={`group relative glass-card-hover glow-border overflow-hidden ${index % 2 === 1 ? 'md:flex-row-reverse' : ''} flex flex-col md:flex-row`}
+        >
+          <!-- Image -->
+          <div class="md:w-1/2 relative overflow-hidden">
+            <div class={`aspect-video md:aspect-square bg-gradient-to-br ${project.gradient} relative`}>
+              <!-- Placeholder with animation -->
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-32 h-32 rounded-2xl bg-white/10 backdrop-blur-sm animate-morph flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                  <svg class="w-16 h-16 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <!-- Shine effect overlay -->
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+            <div class="flex flex-wrap gap-2 mb-4">
+              {project.tags.map((tag) => (
+                <span class="px-3 py-1 text-xs rounded-full bg-dark-700/50 text-dark-300 border border-dark-600/30">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-4 group-hover:text-primary-400 transition-colors">
+              {project.title}
+            </h3>
+            <p class="text-dark-400 mb-6">{project.description}</p>
+            <a
+              href={project.url}
+              class="inline-flex items-center gap-2 text-primary-400 hover:text-primary-300 font-semibold transition-colors group/link"
+            >
+              Ver Proyecto
+              <svg class="w-5 h-5 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- All Projects Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {allProjects.filter(p => !p.featured).map((project, index) => (
+        <article
+          class="glass-card-hover glow-border group overflow-hidden animate-on-scroll"
+          style={`animation-delay: ${index * 0.1}s`}
+        >
+          <!-- Image -->
+          <div class="relative overflow-hidden">
+            <div class={`aspect-video bg-gradient-to-br ${project.gradient} relative`}>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-20 h-20 rounded-xl bg-white/10 backdrop-blur-sm animate-float flex items-center justify-center">
+                  <svg class="w-10 h-10 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <!-- Overlay on hover -->
+            <div class="absolute inset-0 bg-dark-950/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <a href={project.url} class="btn-primary py-3 px-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                <span>Ver Detalles</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="p-6">
+            <div class="flex flex-wrap gap-2 mb-3">
+              {project.tags.map((tag) => (
+                <span class="px-2 py-1 text-xs rounded-full bg-dark-700/50 text-dark-400">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <h3 class="text-lg font-display font-semibold text-white mb-2 group-hover:text-primary-400 transition-colors">
+              {project.title}
+            </h3>
+            <p class="text-dark-400 text-sm">{project.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
