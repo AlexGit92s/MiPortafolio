@@ -2,7 +2,7 @@
 export const siteConfig = {
   title: 'Alexander Silva | Facilitador de Soluciones Digitales',
   description: 'Transformo ideas en soluciones digitales de alto impacto desde Tegucigalpa, Honduras. Desarrollo web, apps móviles, automatización y estrategia digital con tecnologías de vanguardia.',
-  url: 'https://tu-dominio.com',
+  url: 'https://mi-portafolio-red-six.vercel.app',
   author: 'Alexander Silva',
   email: 'alexander92911@gmail.com',
   phone: '+504 9450 0775',

@@ -13,13 +13,13 @@ const {
   title,
   description,
   image = '/og-image.webp',
-  url = 'https://tu-dominio.com',
+  url = 'https://mi-portafolio-red-six.vercel.app',
   type = 'website',
   publishedTime,
   authors = ['Alex'],
 } = Astro.props;
 
-const siteUrl = 'https://tu-dominio.com';
+const siteUrl = 'https://mi-portafolio-red-six.vercel.app';
 const fullUrl = url.startsWith('http') ? url : `${siteUrl}${url}`;
 const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
 ---

@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://tu-dominio.com/sitemap-index.xml
+Sitemap: https://mi-portafolio-red-six.vercel.app/sitemap.xml
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1
